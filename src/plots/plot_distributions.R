@@ -56,75 +56,30 @@ graph_metrics$root = as.character(graph_metrics$root)
 figures_folder = "./figures"
 
 # Plot Structural Metrics ####
-football_ccdf_assortativity = create_ccdf(football_graph_metrics$assortativity)
-football_ccdf_tree_size = create_ccdf(football_graph_metrics$tree_size_lcc)
-football_ccdf_wiener_index = create_ccdf(football_graph_metrics$wiener_index)
-football_ccdf_depth = create_ccdf(football_graph_metrics$depth)
-football_ccdf_avg_toxicity_distance = create_ccdf(football_graph_metrics$avg_toxicity_distance)
-football_ccdf_toxicity_ratio = create_ccdf(football_graph_metrics$toxicity_ratio)
-
-df_lcc_size_percentge = football_graph_metrics %>%
-  filter(tree_size_lcc >= 10)
-
-football_lcc_size_percentage = create_ccdf(df_lcc_size_percentge$lcc_size_percentage)
-football_ccdf_max_width = create_ccdf(football_graph_metrics$max_width)
-
-elections_ccdf_assortativity = create_ccdf(elections_graph_metrics$assortativity)
-
-df_lcc_size_percentge = elections_graph_metrics %>%
-  filter(tree_size_lcc >= 10)
-elections_lcc_size_percentage = create_ccdf(df_lcc_size_percentge$lcc_size_percentage)
-
-elections_ccdf_tree_size = create_ccdf(elections_graph_metrics$tree_size_lcc)
-elections_ccdf_wiener_index = create_ccdf(elections_graph_metrics$wiener_index)
-elections_ccdf_depth = create_ccdf(elections_graph_metrics$depth)
-elections_ccdf_avg_toxicity_distance = create_ccdf(elections_graph_metrics$avg_toxicity_distance)
-elections_ccdf_toxicity_ratio = create_ccdf(elections_graph_metrics$toxicity_ratio)
-elections_ccdf_max_width = create_ccdf(elections_graph_metrics$max_width)
 
 plot_cascade_metrics_colors <- c("football" = "#264653",
                                  "elections" = "#e76f51")
 
 # Plot Assortativity ####
+
 plot_assortativity = ggplot() +
-  geom_line(data = elections_ccdf_assortativity,
-            aes(x, y, color = "elections"),
-            show.legend = F) +
-  geom_line(data = football_ccdf_assortativity,
-            aes(x, y, color = "football"),
-            show.legend = F) +
-  scale_y_log10(labels = trans_format("log10", math_format(10 ^ .x))) +
-  scale_x_continuous(limits = c(-1, 1), breaks = seq(-1, 1, 1)) +
-  #scale_x_log10(labels = trans_format("log10", math_format(10 ^ .x))) +
-  labs(
-    x = "Assortativity",
-    y = "",
-    color = "Topic",
-    title = "",
+  # geom_histogram(
+  #   data = elections_graph_metrics,
+  #   stat = "count",
+  #   aes(assortativity,
+  #       fill = "elections"),
+  #   na.rm = T,
+  #   show.legend = F
+  # ) +
+  geom_histogram(
+    data = football_graph_metrics,
+    aes(x = assortativity,
+        fill = "football"),
+    na.rm = T,
+    show.legend = F
   ) +
-  scale_color_manual(values = plot_cascade_metrics_colors) +
-  theme_classic() +
-  theme(
-    axis.text = element_text(size = 20),
-    axis.title = element_text(size = 30),
-    legend.title = element_text(size = 25),
-    legend.text = element_text(size = 20),
-    plot.title = element_text(size = 40),
-    plot.subtitle = element_text(size = 32),
-    aspect.ratio = 1
-  )
-
-plot_assortativity
-
-plot_hist_assortativity = ggplot() +
-  geom_histogram(data = football_ccdf_assortativity,
-                 aes(y, fill = "football"),
-                 show.legend = F) +
-  geom_histogram(data = elections_ccdf_assortativity,
-            aes(y, fill = "elections"),
-            show.legend = F) +
-  # scale_y_log10(labels = trans_format("log10", math_format(10 ^ .x))) +
-  scale_x_continuous(limits = c(-1, 1), breaks = seq(-1, 1, 1)) +
+  scale_y_log10(labels = trans_format("log10", math_format(10 ^ .x))) +
+  #scale_x_continuous(limits = c(-1, 1), breaks = seq(-1, 1, 1)) +
   #scale_x_log10(labels = trans_format("log10", math_format(10 ^ .x))) +
   labs(
     x = "Assortativity",
@@ -144,15 +99,17 @@ plot_hist_assortativity = ggplot() +
     aspect.ratio = 1
   )
 
-plot_hist_assortativity
+plot_assortativity
 
 # Plot Depth ####
 plot_depth = ggplot() +
-  geom_line(data = elections_ccdf_depth,
-            aes(x, y, color = "elections"),
+  geom_histogram(data = elections_graph_metrics,
+            aes(x = depth,
+                fill = "elections"),
             show.legend = F) +
-  geom_line(data = football_ccdf_depth,
-            aes(x, y, color = "football"),
+  geom_histogram(data = football_graph_metrics,
+            aes(x = depth,
+                fill = "football"),
             show.legend = F) +
   scale_y_log10(labels = trans_format("log10", math_format(10 ^ .x))) +
   #scale_x_continuous(limits = c(0, 12), breaks = seq(0, 12, 2)) +
@@ -163,7 +120,7 @@ plot_depth = ggplot() +
     color = "Topic",
     title = "",
   ) +
-  scale_color_manual(values = plot_cascade_metrics_colors) +
+  scale_fill_manual(values = plot_cascade_metrics_colors) +
   theme_classic() +
   theme(
     axis.text = element_text(size = 20),
@@ -178,11 +135,13 @@ plot_depth
 
 # Plot Wiener Index ####
 plot_wiener_index = ggplot() +
-  geom_line(data = elections_ccdf_wiener_index,
-            aes(x, y, color = "elections"),
-            show.legend = ) +
-  geom_line(data = football_ccdf_wiener_index,
-            aes(x, y, color = "football"),
+  geom_histogram(data = elections_graph_metrics,
+            aes(x = wiener_index,
+                fill = "elections"),
+            show.legend =) +
+  geom_histogram(data = football_graph_metrics,
+            aes(x = wiener_index,
+                fill = "football"),
             show.legend = F) +
   scale_y_log10(labels = trans_format("log10", math_format(10 ^ .x))) +
   #scale_x_continuous(limits = c(0, 4), breaks = seq(0, 4, 1)) +
@@ -190,10 +149,10 @@ plot_wiener_index = ggplot() +
   labs(
     x = "Wiener Index",
     y = "",
-    color = "Topic",
+    fill = "Topic",
     title = "",
   ) +
-  scale_color_manual(values = plot_cascade_metrics_colors) +
+  scale_fill_manual(values = plot_cascade_metrics_colors) +
   theme_classic() +
   theme(
     axis.text = element_text(size = 20),
@@ -209,21 +168,23 @@ plot_wiener_index
 
 # Plot Tree Size ####
 plot_tree_size = ggplot() +
-  geom_line(data = elections_ccdf_tree_size,
-            aes(x, y, color = "elections"),
-            show.legend = F) +
-  geom_line(data = football_ccdf_tree_size,
-            aes(x, y, color = "football"),
-            show.legend = F) +
+  geom_histogram(data = elections_graph_metrics,
+                 aes(x = tree_size,
+                     fill = "elections"),
+                 show.legend = F) +
+  geom_histogram(data = football_graph_metrics,
+                 aes(x = tree_size,
+                     fill = "football"),
+                 show.legend = F) +
   scale_y_log10(labels = trans_format("log10", math_format(10 ^ .x))) +
   scale_x_log10(labels = trans_format("log10", math_format(10 ^ .x))) +
   labs(
     x = "Tree Size",
-    y = "CCDF",
-    color = "Topic",
+    y = "Number of trees",
+    fill = "Topic",
     title = "",
   ) +
-  scale_color_manual(values = plot_cascade_metrics_colors) +
+  scale_fill_manual(values = plot_cascade_metrics_colors) +
   theme_classic() +
   theme(
     axis.text = element_text(size = 20),
@@ -238,21 +199,14 @@ plot_tree_size
 
 # Plot Toxicity Ratio
 plot_toxicity_ratio = ggplot() +
-  geom_line(
-    data = elections_ccdf_toxicity_ratio,
-    aes(x, y,
-        color = "football"),
-    alpha = 1,
-    show.legend = F
-  ) +
-  geom_line(
-    data = football_ccdf_toxicity_ratio,
-    aes(x, y,
-        color = "elections"),
-    show.legend = F,
-    alpha = 1
-  ) +
-  
+  geom_histogram(data = elections_graph_metrics,
+                 aes(x = toxicity_ratio,
+                     fill = "elections"),
+                 show.legend = F) +
+  geom_histogram(data = football_graph_metrics,
+                 aes(x = toxicity_ratio,
+                     fill = "football"),
+                 show.legend = F) +
   scale_y_log10(
     breaks = trans_breaks("log10", function(x)
       10 ^ x),
@@ -260,14 +214,15 @@ plot_toxicity_ratio = ggplot() +
   ) +
   #scale_y_continuous(labels = c(10^1, 10^1.5, 10^2), breaks = c(10^1, 10^1.5, 10^2)) +
   scale_x_continuous(labels = c(0, 0.50, 1), breaks = c(0, 0.50, 1)) +
+  xlim(0,1) +
   # scale_x_log10(labels = trans_format("log10", math_format(10 ^ .x))) +
   labs(
     x = "Toxicity Ratio",
-    y = "CCDF",
-    color = "Topic",
+    y = "N. of Trees",
+    fill = "Topic",
     title = "",
   ) +
-  scale_color_manual(values = plot_cascade_metrics_colors) +
+  scale_fill_manual(values = plot_cascade_metrics_colors) +
   theme_classic() +
   theme(
     axis.text = element_text(size = 20),
@@ -282,27 +237,21 @@ plot_toxicity_ratio
 
 # Plot LCC Size ###
 plot_lcc_size_percentage = ggplot() +
-  geom_histogram(
-    data = elections_graph_metrics,
-    aes(x = lcc_size_percentage,
-        fill = "football"),
-    alpha = 1,
-    show.legend = F
-  ) +
-  geom_histogram(
-    data = football_graph_metrics,
-    aes(x = lcc_size_percentage,
-        fill = "elections"),
-    show.legend = F,
-    alpha = 1
-  ) +
-  
+  geom_histogram(data = elections_graph_metrics,
+                 aes(x = lcc_size_percentage,
+                     fill = "elections"),
+                 show.legend = F) +
+  geom_histogram(data = football_graph_metrics,
+                 aes(x = lcc_size_percentage,
+                     fill = "football"),
+                 show.legend = F) +
   scale_y_log10(labels = trans_format("log10", math_format(10 ^ .x))) +
+  xlim(0,1)+
   # scale_x_log10(labels = trans_format("log10", math_format(10 ^ .x))) +
   labs(
     x = "LCC Size\nPercentage",
-    y = "Number of Trees",
-    color = "Topic",
+    y = "N. of Trees",
+    fill = "Topic",
     title = "",
   ) +
   scale_fill_manual(values = plot_cascade_metrics_colors) +
@@ -320,21 +269,24 @@ plot_lcc_size_percentage
 
 # Plot Average Toxicity Distance
 plot_avg_toxicity_distance = ggplot() +
-  geom_line(data = elections_ccdf_avg_toxicity_distance,
-            aes(x, y, color = "elections"),
-            show.legend = F) +
-  geom_line(data = football_ccdf_avg_toxicity_distance,
-            aes(x, y, color = "football"),
-            show.legend = T) +
+  geom_histogram(data = elections_graph_metrics,
+                 aes(x = avg_toxicity_distance,
+                     fill = "elections"),
+                 show.legend = F) +
+  geom_histogram(data = football_graph_metrics,
+                 aes(x = avg_toxicity_distance,
+                     fill = "football"),
+                 show.legend = F) +
   scale_y_log10(labels = trans_format("log10", math_format(10 ^ .x))) +
+
   #scale_x_log10(labels = trans_format("log10", math_format(10 ^ .x))) +
   labs(
     x = "Avg Toxicity\nDistance",
-    y = "CCDF",
+    y = "N. of Trees",
     color = "Topic",
     title = "",
   ) +
-  scale_color_manual(values = plot_cascade_metrics_colors) +
+  scale_fill_manual(values = plot_cascade_metrics_colors) +
   theme_classic() +
   theme(
     axis.text = element_text(size = 20),
@@ -349,22 +301,24 @@ plot_avg_toxicity_distance
 
 # Width ####
 plot_width = ggplot() +
-  geom_line(data = elections_ccdf_max_width ,
-            aes(x, y, color = "elections"),
-            show.legend = F) +
-  geom_line(data = football_ccdf_max_width,
-            aes(x, y, color = "football"),
-            show.legend = F) +
+  geom_histogram(data = elections_graph_metrics,
+                 aes(x = max_width,
+                     fill = "elections"),
+                 show.legend = F) +
+  geom_histogram(data = football_graph_metrics,
+                 aes(x = max_width,
+                     fill = "football"),
+                 show.legend = F) +
   scale_y_log10(labels = trans_format("log10", math_format(10 ^ .x))) +
   #scale_y_continuous(limits = c(0, 12), breaks = seq(0, 12, 2)) +
   scale_x_log10(labels = trans_format("log10", math_format(10 ^ .x))) +
   labs(
     x = "Max Tree Width",
-    y = "CCDF",
+    y = "N. of Trees",
     color = "Topic",
     title = "",
   ) +
-  scale_color_manual(values = plot_cascade_metrics_colors) +
+  scale_fill_manual(values = plot_cascade_metrics_colors) +
   theme_classic() +
   theme(
     axis.text = element_text(size = 20),
@@ -432,5 +386,3 @@ ggsave(
   device = "pdf"
 )
 
-
-dev.off()

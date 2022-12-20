@@ -10,7 +10,7 @@ set.seed(42)
 
 topic = "football"
 load_comments = TRUE
-is_toxicity_shuffling_enabled = TRUE
+is_toxicity_shuffling_enabled = T
 threshold = 0.6
 
 if(is_toxicity_shuffling_enabled)
@@ -68,8 +68,6 @@ get_wiener_index <- function(tree)
   wiener_index = mean_distance(tree)
   return(wiener_index)
 }
-
-
 
 get_shortest_path_from_root_to_node <-
   function(g, root_node, target_node) {
@@ -138,13 +136,13 @@ get_toxicity_ratio <-
     
   }
 get_assortativity <-
-  function(g, root, property, is_directed = FALSE)
+  function(g, root, is_directed = FALSE)
   {
     g = delete.vertices(g, root)
-    property_attributes = get.vertex.attribute(g, property)
+    property_attributes = get.vertex.attribute(g, "is_toxic")
     
-    assortativity_score = assortativity(g,
-                                        types1 = property_attributes,
+    assortativity_score = assortativity_nominal(g,
+                                          types = V(g)$is_toxic,
                                         directed = F)
     
     return(l = assortativity_score)
@@ -226,7 +224,7 @@ for (c_id in unique_conversation_ids)
     
     V(tree_lcc)$created_at = lcc_metadata$created_at
     V(tree_lcc)$toxicity_score = lcc_metadata$toxicity_score
-    V(tree_lcc)$is_toxic = ifelse(lcc_metadata$toxicity_score >= threshold, T, F)
+    V(tree_lcc)$is_toxic = ifelse(lcc_metadata$toxicity_score >= threshold, 1, 2)
     
     if (is_toxicity_shuffling_enabled == TRUE)
     {
@@ -249,9 +247,7 @@ for (c_id in unique_conversation_ids)
         sep = ""
       )
     }
-    
 
-    
     write.csv(as_long_data_frame(tree),
               tree_filename)
     
@@ -261,34 +257,6 @@ for (c_id in unique_conversation_ids)
     
     #compute the depth of the tree considering the root node only
     gtree_depth = tree_depth(tree_lcc, c_id)
-    
-    # Toxicity ratio
-    toxicity_ratio = get_toxicity_ratio(
-      df_toxic_comments_by_conversation_id,
-      df_comments_by_conversation_id,
-      c_id
-    )
-    
-    # Assortativity
-    assortativity = NaN
-    tryCatch({
-      assortativity = get_assortativity(tree_lcc, c_id, "toxicity_score")
-    },
-    error = function(e) {
-      assortativity = NaN
-    })
-    
-    # Mean root distance
-    mean_root_distance = NaN
-    tryCatch({
-      mean_root_distance = get_mean_root_distance(tree_lcc, c_id)
-    },
-    error = function(e) {
-      mean_root_distance = NaN
-    })
-    
-    # Wiener Index
-    wiener_index = get_wiener_index(tree_lcc)
     
     # Max Width
     bfs_result = bfs(tree_lcc, c_id, order=TRUE, rank=TRUE, father=TRUE, pred=TRUE,
@@ -306,6 +274,44 @@ for (c_id in unique_conversation_ids)
       group_by(distance_from_root) %>% 
       summarise(total_degree_by_level = sum(degree)) %>% 
       summarise(max_width = max(total_degree_by_level))
+    
+    # We compute metrics involving toxicity only for LCC with at least 10 nodes
+    if(gorder(tree_lcc) >= 10)
+    {
+      # Toxicity ratio
+      toxicity_ratio = get_toxicity_ratio(
+        df_toxic_comments_by_conversation_id,
+        df_comments_by_conversation_id,
+        c_id
+      )
+      
+      # Assortativity
+      assortativity = NA
+      tryCatch({
+        assortativity = get_assortativity(tree_lcc, c_id)
+      },
+      error = function(e) {
+        assortativity = NA
+      })
+      
+      # Mean root distance
+      mean_root_distance = NA
+      tryCatch({
+        mean_root_distance = get_mean_root_distance(tree_lcc, c_id)
+      },
+      error = function(e) {
+        mean_root_distance = NA
+      })
+    }
+    else
+    {
+      toxicity_ratio = NA
+      assortativity = NA
+      mean_root_distance = NA
+    }
+    
+    # Wiener Index
+    wiener_index = get_wiener_index(tree_lcc)
     
     # Save tree metrics for the following subverse
     df_metrics = tibble(
