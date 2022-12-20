@@ -126,6 +126,7 @@ elections_n_users_commenting = total_comments_df %>%
   count()
 
 df_stats_elections = tibble(
+  topic = "Elections",
   n_posts = elections_n_posts$n,
   n_unique_users_posting = elections_n_users$n,
   n_original_posts = elections_n_original_posts$n,
@@ -139,8 +140,6 @@ df_stats_elections = tibble(
   n_conversation_ids = elections_n_conversation_ids$n,
   n_unique_users_commenting = elections_n_users_commenting$n
 )
-
-rownames(df_stats_elections) = "Elections"
 
 df_stats = rbind(df_stats,
                  df_stats_elections)
@@ -266,12 +265,11 @@ df_stats_football = tibble(
   n_unique_users_commenting = football_n_users_commenting$n
 )
 
-rownames(df_stats_football) = "Football"
-
 df_stats = rbind(df_stats,
                  df_stats_football)
 
 rm(
+  topic = "Football",
   df_tweets_eligibile,
   football_comments_filename,
   football_n_conversation_ids,
