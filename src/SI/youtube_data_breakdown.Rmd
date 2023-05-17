@@ -1,0 +1,553 @@
+# Data Breakdown
+
+In this document, we perform the data breakdown of all YouTube content.
+
+We are going to manage two topics:
+
+-   Football
+
+-   Elections
+
+Data were downloaded in two steps:
+
+1.  from August 25th 2022 to October 25th 2022
+2.  from October 25th 2022 to December 25th 2022
+
+We will refer as the first point with the *current* term, whilst data from second point will be referred as *new* data. Moreover, data from the first point was already tidied with the {elections,*football}\_sanity*\_check_twitter.R*,* so we will refer to the final datasets that those file produced. Data from the second point, instead, are saved in a unique .parquet file for each topic, so we will need to differentiate between original posts, comments and so on.
+
+## Libraries and Reset
+
+```{r libraries and reset, echo=FALSE, warning=FALSE, message=FALSE}
+library(arrow)
+library(tibble)
+library(lubridate)
+library(dplyr)
+library(ggplot2)
+library(scales)
+
+rm(list = ls())
+gc()
+```
+
+## Football
+
+### Topic Selection
+
+```{r topic selection}
+tp = "football"
+```
+
+### Global Variables
+
+```{r football variables, echo=FALSE}
+current_folder_filename <- paste("/media/gabett/Volume/data-repository/panconesi-football-elections", tp, "youtube", "current", 
+                                 sep ="/")
+
+new_folder_filename <- paste("/media/gabett/Volume/data-repository/panconesi-football-elections", tp, "youtube", "new", 
+                             sep ="/")
+```
+
+### Load Channel Data
+
+#### From 25 August to 25 October 2022
+```{r load current channel data, echo = FALSE}
+input_filename <- paste(current_folder_filename,
+                        "channels_stats.RData",
+                        sep = "/")
+load(input_filename)
+
+current_channels_stats <- channels_stats %>% 
+  rename(downloaded_channel_info_at = Downloaded_Channel_Info_At,
+         channel_default_lang = channel_defaul_lang) %>% 
+  mutate_at(c("channel_id", "channel_title", "channel_description"), as.character) %>% 
+  mutate(channel_published_at = lubridate::as_datetime(channel_published_at)) %>% 
+  distinct(channel_id, .keep_all = T)
+
+rm(channels_stats)
+```
+
+```{r load new data, echo = FALSE}
+input_filename <- paste(new_folder_filename,
+                        "channels_stats.RData",
+                        sep = "/")
+load(input_filename)
+
+new_channels_stats <- channels_stats %>% 
+  rename(downloaded_channel_info_at = Downloaded_Channel_Info_At,
+         channel_default_lang = channel_defaul_lang) %>% 
+  mutate_at(c("channel_id", "channel_title", "channel_description"), as.character) %>% 
+  mutate(channel_published_at = lubridate::as_datetime(channel_published_at)) %>% 
+  distinct(channel_id, .keep_all = T)
+
+rm(channels_stats)
+```
+
+```{r unify channel stats}
+
+channels_stats <- rbind(current_channels_stats,
+                        new_channels_stats)
+channels_stats <- channels_stats %>% 
+  distinct(channel_id, .keep_all = T)
+
+rm(current_channels_stats,
+                        new_channels_stats)
+```
+
+### Load Data from 25 August 2022 to 25 October 2022
+
+#### Original posts
+
+```{r load comments from 25/8/22 to 25/10/22, echo = FALSE}
+input_filename <- paste(current_folder_filename,
+                        "videos_stats.RData",
+                        sep = "/")
+
+load(input_filename)
+current_original_videos <- videos_stats %>% 
+  rename(created_at = publishedAt,
+         channel_id = channelId,
+         channel_title = channelTitle,
+         view_count = viewCount,
+         like_count = likeCount,
+         dislike_count = dislikeCount,
+         favorite_count = favoriteCount,
+         comment_count = commentCount,
+         downloaded_at = DownloadedAt,
+         got_stats = GotStats,
+         to_be_updated = ToBeUpdated) %>% 
+  mutate_at(c("video_id", "channel_id", "channel_title"), as.character) %>% 
+  mutate(created_at = lubridate::as_datetime(created_at),
+         downloaded_at = lubridate::as_datetime(downloaded_at)) %>% 
+  filter(created_at >= "2022-08-25") %>% 
+  distinct(video_id, .keep_all = T)
+
+rm(videos_stats)
+```
+
+```{r load comments from 25/10/22 to 25/12/22, echo = FALSE}
+input_filename <- paste(new_folder_filename,
+                        "videos_stats.RData",
+                        sep = "/")
+
+load(input_filename)
+new_original_videos <- videos_stats %>% 
+  rename(created_at = publishedAt,
+         channel_id = channelId,
+         channel_title = channelTitle,
+         view_count = viewCount,
+         like_count = likeCount,
+         dislike_count = dislikeCount,
+         favorite_count = favoriteCount,
+         comment_count = commentCount,
+         downloaded_at = DownloadedAt,
+         got_stats = GotStats,
+         to_be_updated = ToBeUpdated) %>% 
+  mutate_at(c("video_id", "channel_id", "channel_title"), as.character) %>% 
+  mutate(created_at = lubridate::as_datetime(created_at),
+         downloaded_at = lubridate::as_datetime(downloaded_at)) %>% 
+  filter(created_at >= "2022-08-25") %>% 
+  distinct(video_id, .keep_all = T)
+
+rm(videos_stats)
+```
+
+```{r unify channels_stats}
+original_videos <- rbind(current_original_videos,
+                         new_original_videos)
+
+original_videos <- original_videos %>% 
+  distinct(video_id, .keep_all = T)
+
+rm(current_original_videos,
+                         new_original_videos)
+```
+
+#### Comments
+
+```{r load comments from 25/8/22 to 25/10/22, echo = FALSE}
+input_filename <- paste("/media/gabett/Volume/data-repository/panconesi-football-elections/youtube_overall/",
+                        "youtube-football-elections-italian_comments_scored_from_20220825_to_20221025.parquet",
+                        sep = "")
+print(paste("Loading", input_filename))
+
+current_df_comments <- read_parquet(input_filename)
+current_df_comments <- current_df_comments %>% 
+  filter(topic == tp) %>% 
+  filter(language == "it")
+
+current_df_comments <- current_df_comments %>% 
+  rename(created_at = published_at) %>% 
+  mutate(created_at = lubridate::as_datetime(created_at))
+
+current_df_comments <- current_df_comments %>% 
+  distinct(comment_id, .keep_all = T)
+
+current_df_comments <- current_df_comments %>% 
+  inner_join(original_videos, 
+             by = "video_id", 
+             suffix = c("_comment", "_original_video")) %>% 
+  inner_join(channels_stats, by = "channel_id") %>% 
+  mutate(topic = tp)
+
+current_df_comments <- current_df_comments %>% 
+  select(-channel_title.x) %>% 
+  rename(channel_title = channel_title.y)
+```
+
+### Load Data from 25 October 2022 to 25 December 2022
+
+```{r load data from 25/10/22 to 25/12/22}
+input_filename <- paste(new_folder_filename,
+                        "football_italian_comments_unified_scored.parquet",
+                        sep = "/")
+print(paste("Loading", input_filename))
+
+new_df_comments <- read_parquet(input_filename)
+new_df_comments <- new_df_comments %>% 
+  filter(language == "it")
+
+new_df_comments <- new_df_comments %>% 
+  rename(created_at = published_at) %>% 
+  mutate(created_at = lubridate::as_datetime(created_at))
+
+new_df_comments <- new_df_comments %>% 
+  distinct(comment_id, .keep_all = T)
+
+new_df_comments <- new_df_comments %>% 
+  inner_join(original_videos, 
+             by = "video_id", 
+             suffix = c("_comment", "_original_video")) %>% 
+  inner_join(channels_stats, by = "channel_id") %>% 
+  mutate(topic = tp)
+
+new_df_comments <- new_df_comments %>% 
+  select(-channel_title.x) %>% 
+  rename(channel_title = channel_title.y,
+         updated_at = updatedt_at) 
+```
+
+```{r unify football comments}
+df_data_football <- rbind(current_df_comments,
+                     new_df_comments)
+
+df_data_football <- df_data_football %>% 
+  distinct(comment_id, .keep_all = T)
+
+df_data_football$topic = "football"
+
+rm(current_df_comments,
+                     new_df_comments)
+```
+
+### Statistics
+
+```{r football statistics}
+football_number_of_original_videos <- as.data.frame(original_videos) %>% 
+  distinct(video_id) %>% 
+  count() %>% 
+  pull()
+
+football_number_of_comments <- df_data_football %>%
+    distinct(comment_id) %>% 
+    count() %>% 
+    pull()
+
+football_number_of_users_posting <- as.data.frame(original_videos) %>%
+  distinct(video_id, .keep_all = T) %>%
+  distinct(channel_id, .keep_all = T) %>% 
+  count() %>% 
+  pull()
+
+football_number_of_users_commenting <- df_data_football %>% 
+  distinct(comment_id, .keep_all = T) %>%  
+  distinct(user_name, .keep_all = T) %>% 
+  count() %>% 
+  pull()
+
+football_number_of_users_conversations_at_least_10_comments <- df_data_football %>% 
+  group_by(video_id) %>% 
+  summarise(n_comments = n()) %>% 
+  filter(n_comments >= 10) %>% 
+  count() %>% 
+  pull()
+```
+
+### Save Parquet Data
+
+```{r write entire football dataset}
+output_filename <- paste("/media/gabett/Volume/data-repository/panconesi-football-elections",
+                        tp,
+                        "youtube",
+                        paste("youtube_", tp ,"_entire_dataset.parquet", sep = ""),
+                        sep = "/")
+write_parquet(df_data_football, output_filename)
+
+output_filename <- paste("/media/gabett/Volume/data-repository/panconesi-football-elections",
+                        tp,
+                        "youtube",
+                        paste("youtube_", tp ,"_original_videos_entire_dataset.parquet", sep = ""),
+                        sep = "/")
+write_parquet(original_videos, output_filename)
+```
+
+## Elections
+
+### Topic Selection
+
+```{r topic selection}
+tp = "elections"
+```
+
+### Global Variables
+
+```{r football variables, echo=FALSE}
+current_folder_filename <- paste("/media/gabett/Volume/data-repository/panconesi-football-elections", tp, "youtube", "current", 
+                                 sep ="/")
+
+new_folder_filename <- paste("/media/gabett/Volume/data-repository/panconesi-football-elections", tp, "youtube", "new", 
+                             sep ="/")
+```
+
+### Load Channel Data
+
+#### From 25 August to 25 October 2022
+
+```{r load current channel data, echo = FALSE}
+input_filename <- paste(current_folder_filename,
+                        "channels_stats.RData",
+                        sep = "/")
+load(input_filename)
+
+current_channels_stats <- channels_stats %>% 
+  rename(downloaded_channel_info_at = Downloaded_Channel_Info_At,
+         channel_default_lang = channel_defaul_lang) %>% 
+  mutate_at(c("channel_id", "channel_title", "channel_description"), as.character) %>% 
+  mutate(channel_published_at = lubridate::as_datetime(channel_published_at)) %>% 
+  distinct(channel_id, .keep_all = T)
+
+rm(channels_stats)
+```
+
+```{r load new data, echo = FALSE}
+input_filename <- paste(new_folder_filename,
+                        "channels_stats.RData",
+                        sep = "/")
+load(input_filename)
+
+new_channels_stats <- channels_stats %>% 
+  rename(downloaded_channel_info_at = Downloaded_Channel_Info_At,
+         channel_default_lang = channel_defaul_lang) %>% 
+  mutate_at(c("channel_id", "channel_title", "channel_description"), as.character) %>% 
+  mutate(channel_published_at = lubridate::as_datetime(channel_published_at)) %>% 
+  distinct(channel_id, .keep_all = T)
+
+rm(channels_stats)
+```
+
+```{r unify channel stats}
+
+channels_stats <- rbind(current_channels_stats,
+                        new_channels_stats)
+channels_stats <- channels_stats %>% 
+  distinct(channel_id, .keep_all = T)
+
+rm(current_channels_stats,
+                        new_channels_stats)
+```
+
+### Load Data from 25 August 2022 to 25 October 2022
+
+#### Original posts
+
+```{r load comments from 25/8/22 to 25/10/22, echo = FALSE}
+input_filename <- paste(current_folder_filename,
+                        "videos_stats.RData",
+                        sep = "/")
+
+load(input_filename)
+current_original_videos <- videos_stats %>% 
+  rename(created_at = publishedAt,
+         channel_id = channelId,
+         channel_title = channelTitle,
+         view_count = viewCount,
+         like_count = likeCount,
+         dislike_count = dislikeCount,
+         favorite_count = favoriteCount,
+         comment_count = commentCount,
+         downloaded_at = DownloadedAt,
+         got_stats = GotStats,
+         to_be_updated = ToBeUpdated) %>% 
+  mutate_at(c("video_id", "channel_id", "channel_title"), as.character) %>% 
+  mutate(created_at = lubridate::as_datetime(created_at),
+         downloaded_at = lubridate::as_datetime(downloaded_at)) %>% 
+  filter(created_at >= "2022-08-25") %>% 
+  distinct(video_id, .keep_all = T)
+
+rm(videos_stats)
+```
+
+```{r load comments from 25/10/22 to 25/12/22, echo = FALSE}
+input_filename <- paste(new_folder_filename,
+                        "videos_stats.RData",
+                        sep = "/")
+
+load(input_filename)
+new_original_videos <- videos_stats %>% 
+  rename(created_at = publishedAt,
+         channel_id = channelId,
+         channel_title = channelTitle,
+         view_count = viewCount,
+         like_count = likeCount,
+         dislike_count = dislikeCount,
+         favorite_count = favoriteCount,
+         comment_count = commentCount,
+         downloaded_at = DownloadedAt,
+         got_stats = GotStats,
+         to_be_updated = ToBeUpdated) %>% 
+  mutate_at(c("video_id", "channel_id", "channel_title"), as.character) %>% 
+  mutate(created_at = lubridate::as_datetime(created_at),
+         downloaded_at = lubridate::as_datetime(downloaded_at)) %>% 
+  filter(created_at >= "2022-08-25") %>% 
+  distinct(video_id, .keep_all = T)
+
+rm(videos_stats)
+```
+
+```{r unify channels_stats}
+original_videos <- rbind(current_original_videos,
+                         new_original_videos)
+
+original_videos <- original_videos %>% 
+  distinct(video_id, .keep_all = T)
+
+rm(current_original_videos,
+                         new_original_videos)
+```
+
+#### Comments
+
+```{r load comments from 25/8/22 to 25/10/22, echo = FALSE}
+input_filename <- paste("/media/gabett/Volume/data-repository/panconesi-football-elections/youtube_overall/",
+                        "youtube-football-elections-italian_comments_scored_from_20220825_to_20221025.parquet",
+                        sep = "")
+print(paste("Loading", input_filename))
+
+current_df_comments <- read_parquet(input_filename)
+current_df_comments <- current_df_comments %>% 
+  filter(topic == tp) %>% 
+  filter(language == "it")
+
+current_df_comments <- current_df_comments %>% 
+  rename(created_at = published_at) %>% 
+  mutate(created_at = lubridate::as_datetime(created_at))
+
+current_df_comments <- current_df_comments %>% 
+  distinct(comment_id, .keep_all = T)
+
+current_df_comments <- current_df_comments %>% 
+  inner_join(original_videos, 
+             by = "video_id", 
+             suffix = c("_comment", "_original_video")) %>% 
+  inner_join(channels_stats, by = "channel_id") %>% 
+  mutate(topic = tp)
+
+current_df_comments <- current_df_comments %>% 
+  select(-channel_title.x) %>% 
+  rename(channel_title = channel_title.y)
+```
+
+### Load Data from 25 October 2022 to 25 December 2022
+
+```{r load data from 25/10/22 to 25/12/22}
+input_filename <- paste(new_folder_filename,
+                        "elections_italian_comments_unified_scored.parquet",
+                        sep = "/")
+print(paste("Loading", input_filename))
+
+new_df_comments <- read_parquet(input_filename)
+new_df_comments <- new_df_comments %>% 
+  filter(language == "it")
+
+new_df_comments <- new_df_comments %>% 
+  rename(created_at = published_at) %>% 
+  mutate(created_at = lubridate::as_datetime(created_at))
+
+new_df_comments <- new_df_comments %>% 
+  distinct(comment_id, .keep_all = T)
+
+new_df_comments <- new_df_comments %>% 
+  inner_join(original_videos, 
+             by = "video_id", 
+             suffix = c("_comment", "_original_video")) %>% 
+  inner_join(channels_stats, by = "channel_id") %>% 
+  mutate(topic = tp)
+
+new_df_comments <- new_df_comments %>% 
+  select(-channel_title.x) %>% 
+  rename(channel_title = channel_title.y,
+         updated_at = updatedt_at) 
+```
+
+```{r}
+df_data_elections <- rbind(current_df_comments,
+                     new_df_comments)
+
+df_data_elections <- df_data_elections %>% 
+  distinct(comment_id, .keep_all = T)
+
+df_data_elections$topic = "elections"
+
+rm(current_df_comments,
+                     new_df_comments)
+```
+
+### Statistics
+
+```{r elections statistics}
+elections_number_of_original_videos <- as.data.frame(original_videos) %>% 
+  distinct(video_id) %>% 
+  count() %>% 
+  pull()
+
+elections_number_of_comments <- df_data_elections %>%
+    distinct(comment_id) %>% 
+    count() %>% 
+    pull()
+
+elections_number_of_users_posting <- as.data.frame(original_videos) %>%
+  distinct(video_id, .keep_all = T) %>%
+  distinct(channel_id, .keep_all = T) %>% 
+  count() %>% 
+  pull()
+
+elections_number_of_users_commenting <- df_data_elections %>% 
+  distinct(comment_id, .keep_all = T) %>%  
+  distinct(user_name, .keep_all = T) %>% 
+  count() %>% 
+  pull()
+
+elections_number_of_users_conversations_at_least_10_comments <- df_data_elections %>% 
+  group_by(video_id) %>% 
+  summarise(n_comments = n()) %>% 
+  filter(n_comments >= 10) %>% 
+  count() %>% 
+  pull()
+```
+
+### Save Parquet Data
+
+```{r write entire football dataset}
+output_filename <- paste("/media/gabett/Volume/data-repository/panconesi-football-elections",
+                        tp,
+                        "youtube",
+                        paste("youtube_", tp ,"_entire_dataset.parquet", sep = ""),
+                        sep = "/")
+write_parquet(df_data_elections, output_filename)
+
+output_filename <- paste("/media/gabett/Volume/data-repository/panconesi-football-elections",
+                        tp,
+                        "youtube",
+                        paste("youtube_", tp ,"_original_videos_entire_dataset.parquet", sep = ""),
+                        sep = "/")
+write_parquet(original_videos, output_filename)
+```
