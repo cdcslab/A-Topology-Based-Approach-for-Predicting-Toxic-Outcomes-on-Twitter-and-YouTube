@@ -1,4 +1,0 @@
-1. Scarico i dati da postgresql nuovi per football ed elections, in italiano
-2. Dalla cartella toxicity_labelling labello i dati
-3. Estraggo il campo in_reply_to_id tramite retrieve_in_reply_to_id.ipynb
-4. 
