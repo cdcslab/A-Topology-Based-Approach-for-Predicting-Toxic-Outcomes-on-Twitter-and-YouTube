@@ -22,7 +22,7 @@ filename <- ifelse(
 
 twitter_topic_graph_metrics_filename <-
   paste(
-    "/media/gabett/Volume/data-repository/panconesi-football-elections/overall_tree_data",
+    "./overall_tree_data",
     filename,
     sep = "/"
   )
@@ -46,7 +46,7 @@ filename <- ifelse(
 
 youtube_topic_graph_metrics_filename <-
   paste(
-    "/media/gabett/Volume/data-repository/panconesi-football-elections/overall_tree_data",
+    "./overall_tree_data",
     filename,
     sep = "/"
   )
@@ -62,11 +62,6 @@ ks_test_toxicity_ratio <- ks.test(twitter_topic_graph_metrics$toxicity_ratio,
                                   youtube_topic_graph_metrics$toxicity_ratio,
                                   na.action = na.omit())$p.value
 ks_test_toxicity_ratio
-
-# Assortativity
-# ks_test_assortativity <- ks.test(twitter_topic_graph_metrics$assortativity, 
-#                                  youtube_topic_graph_metrics$assortativity, na.action = na.omit(), na.action = na.omit())$p.value
-# ks_test_assortativity
 
 # Tree Size
 ks_test_tree_size <- ks.test(twitter_topic_graph_metrics$tree_size, 

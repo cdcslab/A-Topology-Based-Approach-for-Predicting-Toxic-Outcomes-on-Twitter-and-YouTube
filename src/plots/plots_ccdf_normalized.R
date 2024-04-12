@@ -44,18 +44,18 @@ create_normalized_ccdf <- function(x) {
 
 # Variables ####
 youtube_graph_metrics <- read_parquet(
-  "/media/gabett/Volume/data-repository/panconesi-football-elections/overall_tree_data/youtube_overall_graph_metrics.parquet"
+  "./overall_tree_data/youtube_overall_graph_metrics.parquet"
 )
 
 twitter_graph_metrics <- read_parquet(
-  "/media/gabett/Volume/data-repository/panconesi-football-elections/overall_tree_data/twitter_overall_graph_metrics.parquet"
+  "./overall_tree_data/twitter_overall_graph_metrics.parquet"
 )
 
 if(is_toxicity_shuffling_enabled)
 {
-  figures_folder = "/home/gabett/Documents/repository/football-elections-cascade-comparison/figures/ccdfs_normalized/shuffled"
+  figures_folder = "./figures/ccdfs_normalized/shuffled"
 } else {
-  figures_folder = "/home/gabett/Documents/repository/football-elections-cascade-comparison/figures/ccdfs_normalized/unshuffled"
+  figures_folder = "./figures/ccdfs_normalized/unshuffled"
 }
 
 topic_colors <- c("Football" = "#ff7b00",
@@ -364,12 +364,6 @@ twitter_ccdf_plot <- ggplot(data = df_twitter) +
       10 ^ x, n = 4),
     labels = trans_format("log10", math_format(10 ^.x))
   ) +
-  # scale_y_continuous(
-  #   trans = log10_trans(),
-  #   breaks = trans_breaks("log10", function(x)
-  #     10 ^ x),
-  #   labels = trans_format("log10", math_format(10 ^.x))
-  # ) +
   scale_color_manual(values = topic_colors) +
   theme(aspect.ratio = 1) +
   labs(

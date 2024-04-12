@@ -23,7 +23,6 @@ filename <- ifelse(
 
 overall_graph_metrics_filename <-
   paste(
-    "/media/gabett/Volume/data-repository/panconesi-football-elections/overall_tree_data",
     filename,
     sep = "/"
   )

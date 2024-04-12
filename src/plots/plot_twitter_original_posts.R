@@ -9,10 +9,10 @@ Sys.setlocale("LC_TIME", "en_GB.UTF-8")
 figures_folder <- "/home/gabett/Documents/repository/football-elections-cascade-comparison/figures/"
 
 # Load Twitter Data ####
-elections_df_filename <- paste("/media/gabett/Volume/data-repository/panconesi-football-elections/elections/twitter",
+elections_df_filename <- paste("./elections/twitter",
                          "elections_twitter_data_scored.parquet",
                          sep = "/")
-football_df_filename <- paste("/media/gabett/Volume/data-repository/panconesi-football-elections/football/twitter",
+football_df_filename <- paste("./football/twitter",
                                "football_twitter_data_scored.parquet",
                                sep = "/")
 
@@ -66,8 +66,6 @@ plot_posts_per_day <-
        title = "") + 
   xlim(as.Date("2022-08-25"),
        NA) +
-  # scale_y_log10(breaks = trans_breaks("log10", function(x) 10^x),
-  #               labels = trans_format("log10", math_format(10^.x))) +
   scale_color_manual(values = c("Football" = "#ff7b00",
                                                 "Elections" = "#003f88")) +
   facet_wrap(~social) +

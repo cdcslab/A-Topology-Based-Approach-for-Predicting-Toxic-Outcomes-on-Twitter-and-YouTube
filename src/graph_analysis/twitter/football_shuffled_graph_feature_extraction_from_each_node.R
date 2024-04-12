@@ -145,9 +145,9 @@ tree_max_width <- function(tree, c_id)
 topic = "football"
 threshold = 0.6
 
-posts_filename = "/media/gabett/Volume/data-repository/panconesi-football-elections/football/twitter/football_twitter_data_with_in_reply_to_id_filled.RData"
-comments_filename = "/media/gabett/Volume/data-repository/panconesi-football-elections/football/twitter/football_twitter_data_with_in_reply_to_id_filled.RData"
-output_folder = "/media/gabett/Volume/data-repository/panconesi-football-elections/football/twitter/trees/shuffled_graph_analysis_for_each_comment/"
+posts_filename = "./football_twitter_data_with_in_reply_to_id_filled.RData"
+comments_filename = "./football_twitter_data_with_in_reply_to_id_filled.RData"
+output_folder = "./trees/shuffled_graph_analysis_for_each_comment/"
 
 load(posts_filename)
 football_original_posts <- df 

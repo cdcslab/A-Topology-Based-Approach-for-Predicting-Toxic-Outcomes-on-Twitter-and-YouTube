@@ -8,7 +8,7 @@ n = 20
 
 
 # Loading ####
-filename <- "/media/gabett/Volume/data-repository/panconesi-football-elections/youtube_overall_tree_data/graph_metrics.csv"
+filename <- "./youtube_overall_tree_data/graph_metrics.csv"
 df_metrics <- read.csv(filename)
 df_metrics$topic <- ifelse(df_metrics$topic == "football", "Football", "Elections")
 topic_colors <- c("Football" = "#ff7b00",

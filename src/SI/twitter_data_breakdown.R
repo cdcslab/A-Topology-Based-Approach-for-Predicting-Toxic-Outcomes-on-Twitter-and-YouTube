@@ -13,7 +13,7 @@ gc()
 tp = "football"
 
 ## Global Variables
-folder_filename <- paste("/media/gabett/Volume/data-repository/panconesi-football-elections", tp, "twitter", sep ="/")
+folder_filename <- paste("./", tp, "twitter", sep ="/")
 
 ## Load Data
 input_filename <- paste(folder_filename, 
@@ -59,7 +59,7 @@ football_number_of_users_conversations_at_least_10_comments <- df_data_football 
 tp = "elections"
 
 ## Global Variables
-folder_filename <- paste("/media/gabett/Volume/data-repository/panconesi-football-elections", tp, "twitter", sep ="/")
+folder_filename <- paste("./", tp, "twitter", sep ="/")
 
 ## Load Data
 input_filename <- paste(folder_filename, 

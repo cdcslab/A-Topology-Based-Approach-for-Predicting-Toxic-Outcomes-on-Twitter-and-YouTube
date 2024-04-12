@@ -148,10 +148,10 @@ load_comments = TRUE
 is_toxicity_shuffling_enabled = F
 threshold = 0.6
 
-folder <- "/media/gabett/Volume/data-repository/panconesi-football-elections/elections/youtube/"
+folder <- "./"
 posts_filename = paste(folder, "youtube_elections_original_videos_entire_dataset_scored.parquet", sep = "")
 comments_filename = paste(folder, "youtube_elections_entire_dataset.parquet", sep = "")
-output_folder = "/media/gabett/Volume/data-repository/panconesi-football-elections/elections/youtube/trees/shuffled_graph_analysis_for_each_comment/"
+output_folder = "./trees/shuffled_graph_analysis_for_each_comment/"
 
 # Load data ####
 # Posts

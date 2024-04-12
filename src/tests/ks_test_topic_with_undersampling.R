@@ -24,7 +24,6 @@ filename <- ifelse(
 
 overall_graph_metrics_filename <-
   paste(
-    "/media/gabett/Volume/data-repository/panconesi-football-elections/overall_tree_data",
     filename,
     sep = "/"
   )
@@ -38,7 +37,6 @@ resampled_elections <- df_metrics %>%
   filter(topic == "elections")
 
 # Performing undersampling
-
 min_topic <- which.min(c(dim(resampled_football)[1], dim(resampled_elections)[1]))
 min_size <- min(c(dim(resampled_football)[1], dim(resampled_elections)[1]))
 
@@ -62,15 +60,6 @@ ks_test_toxicity_ratio <-
     na.action = na.omit()
   )$p.value
 ks_test_toxicity_ratio
-
-# Assortativity
-# ks_test_assortativity <-
-#   ks.test(
-#     resampled_football$assortativity,
-#     resampled_elections$assortativity,
-#     na.action = na.omit()
-#   )$p.value
-# ks_test_assortativity
 
 # Tree Size
 ks_test_tree_size <- ks.test(

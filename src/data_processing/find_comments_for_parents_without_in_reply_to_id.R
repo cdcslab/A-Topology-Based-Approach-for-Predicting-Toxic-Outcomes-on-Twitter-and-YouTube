@@ -1,7 +1,7 @@
 library(dplyr)
 library(arrow)
 
-df_filename <- "/media/gabett/Volume/data-repository/panconesi-football-elections/elections/twitter/elections_twitter_data_scored.parquet"
+df_filename <- "./elections_twitter_data_scored.parquet"
 df <- read_parquet(df_filename)
 df$created_at <- lubridate::as_date(df$created_at)
 

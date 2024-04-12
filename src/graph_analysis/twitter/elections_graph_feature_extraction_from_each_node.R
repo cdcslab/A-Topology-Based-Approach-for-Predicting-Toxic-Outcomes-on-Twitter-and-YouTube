@@ -145,9 +145,9 @@ tree_max_width <- function(tree, c_id)
 topic = "elections"
 threshold = 0.6
 
-posts_filename = "/media/gabett/Volume/data-repository/panconesi-football-elections/elections/twitter/elections_comments_without_in_reply_to_id_filled.RData"
-comments_filename = "/media/gabett/Volume/data-repository/panconesi-football-elections/elections/twitter/elections_comments_without_in_reply_to_id_filled.RData"
-output_folder = "/media/gabett/Volume/data-repository/panconesi-football-elections/elections/twitter/trees/graph_analysis_for_each_comment/"
+posts_filename = "./elections_comments_without_in_reply_to_id_filled.RData"
+comments_filename = "./elections_comments_without_in_reply_to_id_filled.RData"
+output_folder = "./trees/graph_analysis_for_each_comment/"
 
 load(posts_filename)
 elections_original_posts <- df 
@@ -198,10 +198,7 @@ existing_conversation_ids$conversation_ids = sapply(existing_conversation_ids$co
                                                     function(x) str_split(x,
                                                                           ".csv")[[1]][1],
                                                     simplify = T)
-# 
-# unique_conversation_ids = unique_conversation_ids[!unique_conversation_ids %in% existing_conversation_ids$conversation_ids]
-# unique_conversation_ids = unique_conversation_ids[unique_conversation_ids %in% elections_comments$conversation_id]
-
+                                                    
 i = 1
 for (c_id in unique_conversation_ids[i: length(unique_conversation_ids)])
 {

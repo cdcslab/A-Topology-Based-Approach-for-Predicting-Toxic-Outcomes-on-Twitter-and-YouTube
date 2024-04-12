@@ -21,11 +21,11 @@ def process_block(df, block_start, block_end, perspective_api):
 if __name__ == "__main__":
 
     # leggi il file JSON che contiene i tipi di dati delle colonne
-    with open('./csv_metadata.json') as f: # with open(sys.argv[1]) as f:
+    with open(sys.argv[1]) as f:
         dtype = json.load(f)
 
     # leggi il file CSV con i commenti
-    df = pd.read_parquet("/media/gabett/Volume/data-repository/panconesi-football-elections/football/youtube/youtube_football_original_videos_entire_dataset.parquet") # df = pd.read_csv(sys.argv[2], dtype=dtype)
+    df = pd.read_csv(sys.argv[2], dtype=dtype)
     
     # inizializza la colonna toxicity_score
     df['toxicity_score'] = None
@@ -34,7 +34,7 @@ if __name__ == "__main__":
     calls_per_second = 100 # calls_per_second = sys.srgv[3] 
 
     # specifica la chiave dell'API di Google Perspective
-    api_key = 'AIzaSyB7DjREYk_uU5BSmUfXPSH6rGLOHMfrhRs' # api_key = sys.argv[4]
+    api_key = sys.argv[4]
 
     perspective_api = PerspectiveAPI(api_key)
 
@@ -65,11 +65,5 @@ if __name__ == "__main__":
         elapsed_time = end_time - start_time
         time.sleep(min(abs(1-elapsed_time), 1))
 
-        # salva il dataframe ogni 1000 righe
-        # if block_end % 1000 == 0:
-        #     output_file = f'/media/gabett/Volume/data-repository/panconesi-football-elections/elections_missing_new_tweets_to_score_scored_final.parquet' # output_file = sys.argv[4] + block_end + '.csv'
-        #     df.to_parquet(output_file)
-
-
-    output_file = f"/media/gabett/Volume/data-repository/panconesi-football-elections/football/youtube/youtube_football_original_videos_entire_dataset_scored.parquet" # output_file = sys.argv[4] + block_end + '.csv'
+    output_file = f"{sys.argv[4]}.csv"
     df.to_parquet(output_file)

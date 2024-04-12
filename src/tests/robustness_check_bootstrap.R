@@ -16,13 +16,13 @@ filename <-
 
 overall_graph_metrics_filename <-
   paste(
-    "/media/gabett/Volume/data-repository/panconesi-football-elections/overall_tree_data",
+    "overall_tree_data",
     filename,
     sep = "/"
   )
 
 output_filename <- paste(
-  "/media/gabett/Volume/data-repository/panconesi-football-elections/robustness_check_data",
+  "robustness_check_data",
   paste(social, "bootstrap_results.parquet", sep = "_"),
   sep = "/"
 )
@@ -39,14 +39,13 @@ elections_graph_metrics <- df_metrics %>%
 
 football_graph_metrics$assortativity = as.numeric(football_graph_metrics$assortativity)
 elections_graph_metrics$assortativity = as.numeric(elections_graph_metrics$assortativity)
-# Boostrap procedure ####
 
+# Boostrap procedure ####
 "
-1. Faccio un KS su elections e calcio originali e mi salvo la statistica
-2. Unisco elections e calcio dello stesso social
-3. Estraggo un due sample da questa unione, la cui grandezza di questi sample
-è la grandezza massima originaria tra i due topic
-4. Faccio KS tra i due sample e mi chiedo se KS_sample < KS_originale
+1. Perform a KS test on original elections and football data and save the statistic
+2. Combine elections and football data from the same social platform
+3. Extract two samples from this combined data, where the sample size is the maximum size between the two topics
+4. Perform a KS test on the two samples and check if KS_sample < KS_original
 "
 
 features_to_test <- colnames(elections_graph_metrics)[8:15]

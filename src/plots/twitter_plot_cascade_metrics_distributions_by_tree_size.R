@@ -23,7 +23,7 @@ args <- c(
   "twitter",
   "original",
   "/media/gabett/Volume/data-repository/panconesi-football-elections/overall_tree_data",
-  "/home/gabett/Documents/repository/football-elections-cascade-comparison/figures/distributions"
+  "./figures/distributions"
 )
 
 if (length(args) < 4)

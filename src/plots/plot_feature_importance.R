@@ -13,11 +13,11 @@ gc()
 
 # Variables ####
 folder_filename <-
-  "/media/gabett/Volume/data-repository/panconesi-football-elections/ML/feature_importance/"
+  "./ML/feature_importance/"
 filenames <- list.files(folder_filename, full.names = T)
 
 figures_folder <-
-  "/home/gabett/Documents/repository/football-elections-cascade-comparison/figures/ML/"
+  "./figures/ML/"
 figure_output_filename <- paste(figures_folder,
                                 "plot_feature_importance.pdf",
                                 sep = "/")

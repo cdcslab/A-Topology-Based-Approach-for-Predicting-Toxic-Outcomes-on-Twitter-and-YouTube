@@ -6,9 +6,9 @@ rm(list = ls())
 gc()
 
 input_filename <-
-  "/media/gabett/Volume/data-repository/panconesi-football-elections/ML/gbrt_model_metrics.csv"
+  "./ML/gbrt_model_metrics.csv"
 
-figures_folder <- "/home/gabett/Documents/repository/football-elections-cascade-comparison/figures/ML"
+figures_folder <- "./ML"
 
 df_metrics <- read.csv(input_filename)
 

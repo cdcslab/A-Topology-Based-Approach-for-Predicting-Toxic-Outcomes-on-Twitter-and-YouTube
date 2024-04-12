@@ -4,7 +4,7 @@ library(ggplot)
 rm(list = ls())
 gc()
 
-input_filename <- "/media/gabett/Volume/data-repository/panconesi-football-elections/ML/toxicity_prediction_metrics.csv"
+input_filename <- "./ML/toxicity_prediction_metrics.csv"
 
 df_metrics <- read.csv(input_filename)
 

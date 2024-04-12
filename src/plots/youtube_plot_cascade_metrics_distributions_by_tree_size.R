@@ -22,8 +22,8 @@ args <- commandArgs(trailingOnly = TRUE)
 args <- c(
   "youtube",
   "original",
-  "/media/gabett/Volume/data-repository/panconesi-football-elections/overall_tree_data",
-  "/home/gabett/Documents/repository/football-elections-cascade-comparison/figures/distributions"
+  "./overall_tree_data",
+  "./figures/distributions"
 )
 
 if (length(args) < 4)
@@ -124,9 +124,6 @@ for (i in seq(1, length(var_list))) {
     labs(y = var_list[i],
          x = "Tree Size",
          color = "Topic") +
-         # title = ifelse(i == 2, 
-         #                "YouTube Overall Cascade Metrics by Tree Size",
-         #                "")) +
     theme_classic() +
     theme(
       axis.text = element_text(size = 15),
@@ -155,7 +152,6 @@ compound_plots <-
   plot_layout(guides = "collect",
               nrow = 1,
               ncol = 5) +
-  #plot_annotation(title = "YouTube Overall Cascade Metrics by Tree Size") & 
   theme(plot.title = element_text(30, vjust = 2))
 
 

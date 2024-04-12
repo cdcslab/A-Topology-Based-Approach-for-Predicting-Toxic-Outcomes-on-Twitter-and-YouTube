@@ -21,8 +21,8 @@ gc()
 args <- commandArgs(trailingOnly = TRUE)
 args <- c("youtube",
          "original",
-         "/media/gabett/Volume/data-repository/panconesi-football-elections/overall_tree_data",
-         "/home/gabett/Documents/repository/football-elections-cascade-comparison/figures/distributions")
+         "overall_tree_data",
+         "figures/distributions")
 
 if (length(args) < 4)
 {

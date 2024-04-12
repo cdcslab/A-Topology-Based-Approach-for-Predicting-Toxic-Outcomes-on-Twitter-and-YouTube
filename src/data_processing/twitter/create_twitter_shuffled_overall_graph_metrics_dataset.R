@@ -6,7 +6,7 @@ gc()
 
 
 topics <- c("football", "elections")
-output_filename <- "/media/gabett/Volume/data-repository/panconesi-football-elections/overall_tree_data/twitter_shuffled_graph_metrics.parquet"
+output_filename <- "./overall_tree_data/twitter_shuffled_graph_metrics.parquet"
 
 df_total <- tibble()
 
@@ -15,7 +15,7 @@ for (t in topics)
   print(paste("Topic:", t))
   
   folder_path <-
-    paste("/media/gabett/Volume/data-repository/panconesi-football-elections/", 
+    paste("./", 
           t,
           "/",
           "twitter",

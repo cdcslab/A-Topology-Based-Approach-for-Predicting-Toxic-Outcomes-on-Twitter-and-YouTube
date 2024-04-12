@@ -21,11 +21,11 @@ gc()
 args <- commandArgs(trailingOnly = TRUE)
 args <- c(
   "twitter",
-  "/media/gabett/Volume/data-repository/panconesi-football-elections/football/twitter/football_twitter_data_scored.parquet",
-  "/media/gabett/Volume/data-repository/panconesi-football-elections/elections/twitter/elections_twitter_data_scored.parquet",
-  "/media/gabett/Volume/data-repository/panconesi-football-elections/football/youtube/youtube_football_entire_dataset.parquet",
-  "/media/gabett/Volume/data-repository/panconesi-football-elections/elections/youtube/youtube_elections_entire_dataset.parquet",
-  "/home/gabett/Documents/repository/football-elections-cascade-comparison/figures"
+  "football/twitter/football_twitter_data_scored.parquet",
+  "elections/twitter/elections_twitter_data_scored.parquet",
+  "football/youtube/youtube_football_entire_dataset.parquet",
+  "elections/youtube/youtube_elections_entire_dataset.parquet",
+  "figures"
 )
 
 if (length(args) < 5)

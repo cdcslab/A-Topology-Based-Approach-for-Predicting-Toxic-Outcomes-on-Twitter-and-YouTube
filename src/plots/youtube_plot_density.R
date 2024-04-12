@@ -13,7 +13,7 @@ is_toxicity_shuffling_enabled = T
 
 # Variables ####
 graph_metrics <- read_parquet(
-  "/media/gabett/Volume/data-repository/panconesi-football-elections/overall_tree_data/youtube_graph_metrics.csv"
+  "./overall_tree_data/youtube_graph_metrics.csv"
 )
 
 graph_metrics <- as.data.frame(graph_metrics)

@@ -37,8 +37,8 @@ normalize_feature_if_numeric <- function(x)
 args <- commandArgs(trailingOnly = TRUE)
 args <- c("youtube",
           "original",
-          "/media/gabett/Volume/data-repository/panconesi-football-elections/overall_tree_data",
-          "/home/gabett/Documents/repository/football-elections-cascade-comparison/figures/distributions")
+          "overall_tree_data",
+          "figures/distributions")
 
 if (length(args) < 4)
 {
@@ -160,12 +160,6 @@ plot_binnable_metrics <- df_metrics %>%
     labels = trans_format("log10", math_format(10 ^ .x)),
     limits = c(NA, 10000)
   ) +
-  # scale_x_continuous(
-  #   trans = log10_trans(),
-  #   breaks = trans_breaks("log10", function(x)
-  #     10 ^ x),
-  #   labels = trans_format("log10", math_format(10 ^ .x))
-  # ) +
   scale_color_manual(values = topic_colors) +
   scale_fill_manual(values = topic_colors) +
   theme(aspect.ratio = 1) +
@@ -207,12 +201,6 @@ plot_non_binnable_metrics <- df_metrics %>%
     labels = trans_format("log10", math_format(10 ^ .x)),
     limits = c(NA, 10000)
   ) +
-  # scale_x_continuous(
-  #   trans = log10_trans(),
-  #   breaks = trans_breaks("log10", function(x)
-  #     10 ^ x),
-  #   labels = trans_format("log10", math_format(10 ^ .x))
-  # ) +
   scale_color_manual(values = topic_colors) +
   scale_fill_manual(values = topic_colors) +
   theme(aspect.ratio = 1) +

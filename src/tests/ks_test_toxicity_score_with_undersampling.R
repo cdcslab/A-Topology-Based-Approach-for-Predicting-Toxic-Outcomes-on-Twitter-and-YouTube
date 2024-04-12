@@ -20,10 +20,10 @@ gc()
 # External Arguments
 args <- commandArgs(trailingOnly = TRUE)
 args <- c(
-  "/media/gabett/Volume/data-repository/panconesi-football-elections/football/twitter/football_twitter_data_scored.parquet",
-  "/media/gabett/Volume/data-repository/panconesi-football-elections/elections/twitter/elections_twitter_data_scored.parquet",
-  "/media/gabett/Volume/data-repository/panconesi-football-elections/football/youtube/youtube_football_entire_dataset.parquet",
-  "/media/gabett/Volume/data-repository/panconesi-football-elections/elections/youtube/youtube_elections_entire_dataset.parquet",
+  "football_twitter_data_scored.parquet",
+  "elections_twitter_data_scored.parquet",
+  "youtube_football_entire_dataset.parquet",
+  "youtube_elections_entire_dataset.parquet",
 )
 
 if (length(args) < 4)

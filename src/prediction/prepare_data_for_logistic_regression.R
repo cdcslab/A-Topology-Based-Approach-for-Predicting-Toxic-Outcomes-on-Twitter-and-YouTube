@@ -31,14 +31,14 @@ if (length(args) < 2) {
 if(social_name == "youtube")
 {
   graph_folder <-
-  paste("/media/gabett/Volume/data-repository/panconesi-football-elections", 
+  paste("./", 
         topic_name,
         social_name,
   paste("/trees/", shuffled_label, "graph_analysis_for_each_comment", sep = ""),
   sep = "/")
   
   output_folder <- 
-    paste("/media/gabett/Volume/data-repository/panconesi-football-elections", 
+    paste("./", 
           topic_name,
           social_name,
           "trees",
@@ -64,7 +64,7 @@ if(social_name == "youtube")
   text_pattern = "*generative_graph_features_for_video*"
 } else {
 graph_folder <-
-  paste("/media/gabett/Volume/data-repository/panconesi-football-elections/", 
+  paste(".//", 
         topic_name,
         "/",
         social_name,
@@ -72,7 +72,7 @@ graph_folder <-
   sep = "")
 
 output_folder <- 
-  paste("/media/gabett/Volume/data-repository/panconesi-football-elections/", 
+  paste(".//", 
         topic_name,
         social_name,
         "trees",

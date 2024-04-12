@@ -12,7 +12,7 @@ is_toxicity_shuffling_enabled = T
 
 # Variables ####
 graph_metrics = read.csv(
-  "/media/gabett/Volume/data-repository/panconesi-football-elections/overall_tree_data/twitter_graph_metrics.csv"
+  "./overall_tree_data/twitter_graph_metrics.csv"
 )
 
 figures_folder = "./figures/distributions/unshuffled"
@@ -56,18 +56,6 @@ hist_plot <- ggplot(data = graph_metrics_for_plotting) +
              ncol = 4,
              scales = "free",
              shrink = T) +
-  # scale_x_continuous(
-  #   trans = log10_trans(),
-  #   breaks = trans_breaks("log10", function(x)
-  #     10 ^ x, n =  4),
-  #   labels = trans_format("log10", math_format(10 ^.x))
-  # ) +
-  # # scale_y_continuous(
-  #   trans = log10_trans(),
-  #   breaks = trans_breaks("log10", function(x)
-  #     10 ^ x),
-  #   labels = trans_format("log10", math_format(10 ^.x))
-  # ) +
   scale_fill_manual(values = topic_colors) +
   theme(aspect.ratio = 1) +
   labs(

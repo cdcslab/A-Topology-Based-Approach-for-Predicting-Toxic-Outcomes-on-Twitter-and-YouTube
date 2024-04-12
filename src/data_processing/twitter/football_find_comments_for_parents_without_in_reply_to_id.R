@@ -4,8 +4,8 @@ library(arrow)
 rm(list = ls())
 gc()
 
-df_filename <- "/media/gabett/Volume/data-repository/panconesi-football-elections/football/twitter/football_twitter_data_scored.parquet"
-df_output_filename <- "/media/gabett/Volume/data-repository/panconesi-football-elections/football/twitter/football_comments_without_in_reply_to_id_filled.parquet"
+df_filename <- "./football/twitter/football_twitter_data_scored.parquet"
+df_output_filename <- "./football/twitter/football_comments_without_in_reply_to_id_filled.parquet"
 df <- read_parquet(df_filename)
 df$created_at <- lubridate::as_datetime(df$created_at)
 
